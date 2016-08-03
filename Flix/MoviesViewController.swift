@@ -13,6 +13,9 @@ import MBProgressHUD
 class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
   
   @IBOutlet weak var tableView: UITableView!
+  
+  @IBOutlet weak var networkErrorView: UIView!
+  
   var movies: [NSDictionary]?
   var endpoint: String!
   
@@ -21,6 +24,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     tableView.dataSource = self
     tableView.delegate = self
+    networkErrorView.hidden = true
 
     fetchMoviesInfo();
   }
@@ -72,10 +76,16 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     MBProgressHUD.showHUDAddedTo(self.view, animated: true)
     let task: NSURLSessionDataTask = session
       .dataTaskWithRequest(request, completionHandler: { (dataOrNil, response, error) in
-        if let data = dataOrNil {
+        self.networkErrorView.hidden = true
+        MBProgressHUD.hideHUDForView(self.view, animated: true)
+
+        if let error = error {
+          if error.domain == "NSURLErrorDomain" {
+            self.networkErrorView.hidden = false
+          }
+        } else if let data = dataOrNil {
           if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
             data, options:[]) as? NSDictionary {
-            MBProgressHUD.hideHUDForView(self.view, animated: true)
             self.movies = responseDictionary["results"] as? [NSDictionary]
             self.tableView.reloadData()
           }
