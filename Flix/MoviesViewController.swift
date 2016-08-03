@@ -26,7 +26,12 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     tableView.delegate = self
     networkErrorView.hidden = true
 
-    fetchMoviesInfo();
+    let refreshControl = UIRefreshControl()
+    tableView.insertSubview(refreshControl, atIndex: 0)
+    refreshControl.addTarget(self, action: #selector(fetchMoviesInfo(_:)), forControlEvents: UIControlEvents.ValueChanged)
+    tableView.insertSubview(refreshControl, atIndex: 0)
+
+    fetchMoviesInfo(nil);
   }
   
   override func didReceiveMemoryWarning() {
@@ -59,7 +64,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     return cell
   }
   
-  func fetchMoviesInfo() {
+  func fetchMoviesInfo(refreshControl: UIRefreshControl?) {
     let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
     let url = NSURL(string: "https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
     let request = NSURLRequest(
@@ -73,11 +78,18 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
       delegateQueue: NSOperationQueue.mainQueue()
     )
     
-    MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+    if refreshControl == nil {
+      MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+    }
+
     let task: NSURLSessionDataTask = session
       .dataTaskWithRequest(request, completionHandler: { (dataOrNil, response, error) in
         self.networkErrorView.hidden = true
-        MBProgressHUD.hideHUDForView(self.view, animated: true)
+        if let refreshControl = refreshControl {
+          refreshControl.endRefreshing()
+        } else {
+          MBProgressHUD.hideHUDForView(self.view, animated: true)
+        }
 
         if let error = error {
           if error.domain == "NSURLErrorDomain" {
