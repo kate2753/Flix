@@ -13,40 +13,15 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
   
   @IBOutlet weak var tableView: UITableView!
   var movies: [NSDictionary]?
+  var endpoint: String!
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     tableView.dataSource = self
     tableView.delegate = self
-    
-    // Do any additional setup after loading the view.
-    
-    let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-    let url = NSURL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
-    let request = NSURLRequest(
-      URL: url!,
-      cachePolicy: NSURLRequestCachePolicy.ReloadIgnoringLocalCacheData,
-      timeoutInterval: 10)
-    
-    let session = NSURLSession(
-      configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
-      delegate: nil,
-      delegateQueue: NSOperationQueue.mainQueue()
-    )
-    
-    let task: NSURLSessionDataTask = session
-      .dataTaskWithRequest(request, completionHandler: { (dataOrNil, response, error) in
-        if let data = dataOrNil {
-          if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
-            data, options:[]) as? NSDictionary {
-            
-            self.movies = responseDictionary["results"] as? [NSDictionary]
-            self.tableView.reloadData()
-          }
-        }
-      })
-    task.resume()
+
+    fetchMoviesInfo();
   }
   
   override func didReceiveMemoryWarning() {
@@ -66,30 +41,57 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     let overview = movie["overview"] as? String
     cell.titleLabel.text = title
     cell.overviewLabel.text = overview
-
+    
     let baseImageURL = "http://image.tmdb.org/t/p/w500/"
     if let posterPath = movie["poster_path"] as? String {
       let posterImageURL = NSURL(string: baseImageURL + posterPath)
-
+      
       // Asynchronously downloads an image from the specified URL,
       //and sets it once the request is finished.
       cell.posterView.setImageWithURL(posterImageURL!)
     }
-
+    
     return cell
   }
   
-   // MARK: - Navigation
-   
-   // In a storyboard-based application, you will often want to do a little preparation before navigation
-   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-   // Get the new view controller using segue.destinationViewController.
-   // Pass the selected object to the new view controller.
+  func fetchMoviesInfo() {
+    let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
+    let url = NSURL(string: "https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
+    let request = NSURLRequest(
+      URL: url!,
+      cachePolicy: NSURLRequestCachePolicy.ReloadIgnoringLocalCacheData,
+      timeoutInterval: 10)
+    
+    let session = NSURLSession(
+      configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
+      delegate: nil,
+      delegateQueue: NSOperationQueue.mainQueue()
+    )
+    
+    let task: NSURLSessionDataTask = session
+      .dataTaskWithRequest(request, completionHandler: { (dataOrNil, response, error) in
+        if let data = dataOrNil {
+          if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
+            data, options:[]) as? NSDictionary {
+            self.movies = responseDictionary["results"] as? [NSDictionary]
+            self.tableView.reloadData()
+          }
+        }
+      })
+    task.resume()
+  }
+  
+  // MARK: - Navigation
+  
+  // In a storyboard-based application, you will often want to do a little preparation before navigation
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    // Get the new view controller using segue.destinationViewController.
+    // Pass the selected object to the new view controller.
     let cell = sender as! UITableViewCell
     let indexPath = tableView.indexPathForCell(cell)
     let movie = movies![indexPath!.row]
     
     let detailViewController = segue.destinationViewController as! DetailViewController
     detailViewController.movie = movie
-   }
+  }
 }
