@@ -22,7 +22,7 @@
                                         <rect key="frame" x="0.0" y="92" width="320" height="98"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4Pd-qZ-jsX" id="CYy-ym-fUR">
-                                            <rect key="frame" x="0.0" y="0.0" width="287" height="97"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="287" height="97.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Overview" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="pkq-Xq-AsF">
@@ -40,7 +40,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="SZp-6D-MKH">
-                                                    <rect key="frame" x="8" y="7" width="80" height="82"/>
+                                                    <rect key="frame" x="8" y="7" width="80" height="81.5"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                             </subviews>
@@ -64,14 +64,24 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="arQ-Lx-fdx">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MovieCollectionViewCell" id="arQ-Lx-fdx" customClass="MovieCollectionViewCell" customModule="Flix">
                                         <rect key="frame" x="0.0" y="0.0" width="154" height="166"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="154" height="166"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="bT9-oW-Wng">
+                                                    <rect key="frame" x="8" y="8" width="138" height="158"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                            </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <connections>
+                                            <outlet property="posterImageView" destination="bT9-oW-Wng" id="hZ9-b3-Vrr"/>
+                                            <segue destination="0he-Vc-sOO" kind="push" id="g0k-Vb-KYA"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
@@ -105,10 +115,15 @@
                                     <segment title="List"/>
                                     <segment title="Grid"/>
                                 </segments>
+                                <connections>
+                                    <action selector="onMoviesViewChange:" destination="BYZ-38-t0r" eventType="valueChanged" id="HPd-D7-J78"/>
+                                </connections>
                             </segmentedControl>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="collectionView" destination="hYk-Yo-tnD" id="8VO-fZ-WBu"/>
+                        <outlet property="moviesViewSegmentedControl" destination="tE2-3f-tqL" id="dOZ-pJ-BAX"/>
                         <outlet property="networkErrorView" destination="SMG-Ru-Vc0" id="YyP-RQ-17Q"/>
                         <outlet property="tableView" destination="Oec-rI-7Bm" id="C3j-xX-e23"/>
                     </connections>
@@ -129,10 +144,6 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="9d7-og-5a1">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
                                     <view alpha="0.80000000000000004" contentMode="scaleToFill" id="nE4-HW-My7">
                                         <rect key="frame" x="0.0" y="568" width="320" height="261"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -154,6 +165,10 @@
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="9d7-og-5a1">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
                                 </subviews>
                             </scrollView>
                         </subviews>
@@ -194,4 +209,7 @@
     <resources>
         <image name="icon-warning" width="32" height="32"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="jO1-zn-z7U"/>
+    </inferredMetricsTieBreakers>
 </document>

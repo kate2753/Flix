@@ -10,10 +10,11 @@ import UIKit
 import AFNetworking
 import MBProgressHUD
 
-class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
   
+  @IBOutlet weak var moviesViewSegmentedControl: UISegmentedControl!
   @IBOutlet weak var tableView: UITableView!
-  
+  @IBOutlet weak var collectionView: UICollectionView!
   @IBOutlet weak var networkErrorView: UIView!
   
   var movies: [NSDictionary]?
@@ -24,14 +25,31 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     tableView.dataSource = self
     tableView.delegate = self
-    networkErrorView.hidden = true
-
+    collectionView.delegate = self
+    collectionView.dataSource = self
+    
+    // Set up and attach refresh control to the table view
     let refreshControl = UIRefreshControl()
-    tableView.insertSubview(refreshControl, atIndex: 0)
     refreshControl.addTarget(self, action: #selector(fetchMoviesInfo(_:)), forControlEvents: UIControlEvents.ValueChanged)
     tableView.insertSubview(refreshControl, atIndex: 0)
-
+    
+    
+    //Show list view by default (hide grid view)
+    tableView.hidden = false
+    collectionView.hidden = !tableView.hidden
+    //Hide network error by default
+    networkErrorView.hidden = true
+    
     fetchMoviesInfo(nil);
+  }
+  
+  @IBAction func onMoviesViewChange(sender: AnyObject) {
+    let isListView = moviesViewSegmentedControl.selectedSegmentIndex == 0
+    tableView.hidden = !isListView
+    collectionView.hidden = !tableView.hidden
+    if !isListView {
+      collectionView.reloadData()
+    }
   }
   
   override func didReceiveMemoryWarning() {
@@ -64,6 +82,29 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     return cell
   }
   
+  func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    print(movies?.count ?? 0)
+    return movies?.count ?? 0
+  }
+  
+  func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    let cell = collectionView.dequeueReusableCellWithReuseIdentifier("MovieCollectionViewCell", forIndexPath: indexPath) as! MovieCollectionViewCell
+    
+    print(cell)
+    
+    let movie = movies![indexPath.row]
+    
+    let baseImageURL = "http://image.tmdb.org/t/p/w500/"
+    if let posterPath = movie["poster_path"] as? String {
+      let posterImageURL = NSURL(string: baseImageURL + posterPath)
+      
+      // Asynchronously downloads an image from the specified URL,
+      //and sets it once the request is finished.
+      cell.posterImageView.setImageWithURL(posterImageURL!)
+    }
+    return cell
+  }
+  
   func fetchMoviesInfo(refreshControl: UIRefreshControl?) {
     let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
     let url = NSURL(string: "https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
@@ -81,7 +122,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     if refreshControl == nil {
       MBProgressHUD.showHUDAddedTo(self.view, animated: true)
     }
-
+    
     let task: NSURLSessionDataTask = session
       .dataTaskWithRequest(request, completionHandler: { (dataOrNil, response, error) in
         self.networkErrorView.hidden = true
@@ -90,7 +131,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         } else {
           MBProgressHUD.hideHUDForView(self.view, animated: true)
         }
-
+        
         if let error = error {
           if error.domain == "NSURLErrorDomain" {
             self.networkErrorView.hidden = false
@@ -100,6 +141,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             data, options:[]) as? NSDictionary {
             self.movies = responseDictionary["results"] as? [NSDictionary]
             self.tableView.reloadData()
+            self.collectionView.reloadData()
           }
         }
       })
@@ -112,10 +154,13 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     // Get the new view controller using segue.destinationViewController.
     // Pass the selected object to the new view controller.
-    let cell = sender as! UITableViewCell
-    let indexPath = tableView.indexPathForCell(cell)
+    var indexPath:NSIndexPath?
+    if let cell = sender as? UITableViewCell {
+      indexPath = tableView.indexPathForCell(cell)
+    } else if let cell = sender as? UICollectionViewCell {
+      indexPath = collectionView.indexPathForCell(cell)
+    }
     let movie = movies![indexPath!.row]
-    
     let detailViewController = segue.destinationViewController as! DetailViewController
     detailViewController.movie = movie
   }
