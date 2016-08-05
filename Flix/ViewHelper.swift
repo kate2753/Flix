@@ -32,4 +32,33 @@ class ViewHelper {
       }
     )
   }
+  
+  static func loadImageLowHiRes(imageView: UIImageView, lowResImageURL: String, hiResImageURL: String){
+    let lowResImageRequest = NSURLRequest(URL: NSURL(string: lowResImageURL)!)
+    let highResImageRequest = NSURLRequest(URL: NSURL(string: hiResImageURL)!)
+    
+    imageView.setImageWithURLRequest(
+      lowResImageRequest,
+      placeholderImage: nil,
+      success: { (lowResImageRequest, lowResImageResponse, lowResImage) -> Void in
+        imageView.alpha = 0.0
+        imageView.image = lowResImage;
+        UIView.animateWithDuration(0.3, animations: { () -> Void in
+          imageView.alpha = 1.0
+          }, completion: { (sucess) -> Void in
+            imageView.setImageWithURLRequest(
+              highResImageRequest,
+              placeholderImage: lowResImage,
+              success: { (highResImageRequest, highResImageResponse, highResImage) -> Void in
+                imageView.image = highResImage;
+              },
+              failure: { (request, response, error) -> Void in
+                print("failed to load high res image")
+            })
+        })
+      },
+      failure: { (request, response, error) -> Void in
+        print("failed to load low res image")
+    })
+  }
 }

@@ -20,7 +20,7 @@ The following **optional** features are implemented:
 
 - [x] Add a search bar.
 - [x] All images fade in.
-- [ ] For the large poster, load the low-res image first, switch to high-res when complete.
+- [x] For the large poster, load the low-res image first, switch to high-res when complete.
 - [ ] Customize the highlight and selection effect of the cell.
 - [ ] Customize the navigation bar.
 - [ ] Tapping on a movie poster image shows the movie poster as full screen and zoomable.
@@ -34,9 +34,10 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://dl.dropboxusercontent.com/u/36664861/iOSTraining/FlixWalkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
-GIF created with [LiceCap](http://www.cockos.com/licecap/).
+
+GIF created with [Recordit](http://recordit.co/).
 
 ## Notes
 

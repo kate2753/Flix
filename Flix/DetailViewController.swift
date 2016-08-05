@@ -28,11 +28,14 @@ class DetailViewController: UIViewController {
     titleLabel.text = title
     overviewLabel.text = overview
     overviewLabel.sizeToFit()
-
-    let baseImageURL = "http://image.tmdb.org/t/p/w500/"
+    
+    let baseImageURL = "http://image.tmdb.org/t/p/"
+    let lowResImageSize = "w92/"
+    let highResImageSize = "original/"
     if let posterPath = movie["poster_path"] as? String {
-      let posterImageURL = NSURL(string: baseImageURL + posterPath)
-      posterImageView.setImageWithURL(posterImageURL!)
+      ViewHelper.loadImageLowHiRes(posterImageView,
+                                   lowResImageURL: baseImageURL + lowResImageSize + posterPath,
+                                   hiResImageURL: baseImageURL + highResImageSize + posterPath)
     }
   }
   
