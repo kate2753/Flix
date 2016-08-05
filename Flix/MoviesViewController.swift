@@ -77,11 +77,7 @@ UISearchBarDelegate {
     
     let baseImageURL = "http://image.tmdb.org/t/p/w500/"
     if let posterPath = movie["poster_path"] as? String {
-      let posterImageURL = NSURL(string: baseImageURL + posterPath)
-      
-      // Asynchronously downloads an image from the specified URL,
-      //and sets it once the request is finished.
-      cell.posterView.setImageWithURL(posterImageURL!)
+      ViewHelper.loadAndFadeInImage(cell.posterView, imageURL: baseImageURL + posterPath)
     }
     
     return cell
@@ -94,17 +90,10 @@ UISearchBarDelegate {
   func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCellWithReuseIdentifier("MovieCollectionViewCell", forIndexPath: indexPath) as! MovieCollectionViewCell
     
-    print(cell)
-    
     let movie = movies![indexPath.row]
-    
     let baseImageURL = "http://image.tmdb.org/t/p/w500/"
     if let posterPath = movie["poster_path"] as? String {
-      let posterImageURL = NSURL(string: baseImageURL + posterPath)
-      
-      // Asynchronously downloads an image from the specified URL,
-      //and sets it once the request is finished.
-      cell.posterImageView.setImageWithURL(posterImageURL!)
+      ViewHelper.loadAndFadeInImage(cell.posterImageView, imageURL: baseImageURL + posterPath)
     }
     return cell
   }
