@@ -2,7 +2,7 @@
 
 **Flix** is a movies app using the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
 
-Time spent: **X** hours spent in total
+Time spent: **12** hours spent in total
 
 ## User Stories
 
@@ -26,10 +26,6 @@ The following **optional** features are implemented:
 - [X] Tapping on a movie poster image shows the movie poster as full screen and zoomable.
 - [ ] User can tap on a button to play the movie trailer.
 
-The following **additional** features are implemented:
-
-- [ ] List anything else that you can get done to improve the app functionality!
-
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
@@ -41,10 +37,6 @@ Here's a walkthrough of implemented user stories:
 <img src='https://dl.dropboxusercontent.com/u/36664861/iOSTraining/FlixFullScreenPinchToZoom.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [Recordit](http://recordit.co/).
-
-## Notes
-
-Describe any challenges encountered while building the app.
 
 ## License
 
