@@ -23,7 +23,7 @@ The following **optional** features are implemented:
 - [x] For the large poster, load the low-res image first, switch to high-res when complete.
 - [ ] Customize the highlight and selection effect of the cell.
 - [ ] Customize the navigation bar.
-- [ ] Tapping on a movie poster image shows the movie poster as full screen and zoomable.
+- [X] Tapping on a movie poster image shows the movie poster as full screen and zoomable.
 - [ ] User can tap on a button to play the movie trailer.
 
 The following **additional** features are implemented:
@@ -36,6 +36,9 @@ Here's a walkthrough of implemented user stories:
 
 <img src='https://dl.dropboxusercontent.com/u/36664861/iOSTraining/FlixWalkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
+### Full screen poster with pinch to zoon
+
+<img src='https://dl.dropboxusercontent.com/u/36664861/iOSTraining/FlixFullScreenPinchToZoom.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [Recordit](http://recordit.co/).
 
